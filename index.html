@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Country Wind</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-DEfTh0e9.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C619f-Xb.css">
+</head>
+
+<body>
+  <canvas id="stage" aria-label="Dots drawing the chosen country, coloured by its temperature and carried by its wind"></canvas>
+
+  <div class="wx-hud hud-active" id="hud">
+    <aside class="wx-panel">
+      <section class="wx-block">
+        <div class="wx-head">
+          <span class="wx-live-dot" aria-hidden="true"></span>
+          <h1 class="wx-title">Country Wind</h1>
+          <span class="weather-source-status" id="status">Connecting</span>
+        </div>
+        <p class="wx-sub" id="sub">Open-Meteo &middot; live</p>
+        <label class="wx-select">
+          <span class="sr-only">Select country</span>
+          <select id="country"></select>
+        </label>
+      </section>
+
+      <section class="wx-block">
+        <div class="wx-stats">
+          <div class="wx-stat">
+            <span class="wx-stat-value temp" id="temp">--</span>
+            <span class="wx-stat-label">Temp &deg;C</span>
+          </div>
+          <div class="wx-stat">
+            <span class="wx-stat-value wind">
+              <span id="wind">--</span>
+              <!-- Points the way the wind blows. -->
+              <svg class="wx-wind-dir" id="windArrow" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M12 3l6 15-6-3.5L6 18z" /></svg>
+            </span>
+            <span class="wx-stat-label">Wind km/h</span>
+            <span class="wx-wind-from" id="windFrom" hidden></span>
+          </div>
+          <div class="wx-stat">
+            <span class="wx-stat-value band">
+              <span class="weather-color-swatch" id="swatch"></span>
+              <span id="band">--</span>
+            </span>
+            <span class="wx-stat-label">Band</span>
+          </div>
+          <div class="wx-stat">
+            <span class="wx-stat-value pace"><span id="pace">1.00</span>&times;</span>
+            <span class="wx-stat-label">Pace</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="wx-block">
+        <div class="weather-thermal-scale" id="scale" aria-hidden="true">
+          <span class="weather-thermal-span" id="scaleSpan"></span>
+          <span class="weather-thermal-marker" id="marker"></span>
+        </div>
+        <div class="wx-scale-labels" aria-hidden="true"><span>-25&deg;</span><span>10&deg;</span><span>45&deg;</span></div>
+        <div class="wx-range" id="range">Across the country: --</div>
+      </section>
+
+      <section class="wx-block wx-manual">
+        <label class="wx-field"><span>Temp &deg;C</span><input type="number" id="manualTemp" min="-40" max="55" step="0.5" value="24"></label>
+        <label class="wx-field"><span>Wind km/h</span><input type="number" id="manualWind" min="0" max="180" step="0.5" value="18"></label>
+        <label class="wx-field"><span>From &deg;</span><input type="number" id="manualDir" min="0" max="359" step="5" value="270"></label>
+        <button type="button" class="wx-btn" id="realtime" disabled>
+          <span class="wx-live-dot" aria-hidden="true"></span> Realtime
+        </button>
+      </section>
+
+      <section class="wx-block wx-art">
+        <div class="wx-art-row">
+          <label class="wx-select wx-select-sm"><span class="wx-mini">Motion</span>
+            <select id="motion">
+              <option value="auto">Auto cycle</option>
+              <option value="ripple">Ripple</option>
+              <option value="swirl">Swirl</option>
+              <option value="breathe">Breathe</option>
+              <option value="wind">Wind swell</option>
+              <option value="all">All at once</option>
+              <option value="none">Still</option>
+            </select>
+          </label>
+          <label class="wx-select wx-select-sm"><span class="wx-mini">Colour</span>
+            <select id="colorMode">
+              <option value="map">Temp map</option>
+              <option value="average">Average</option>
+              <option value="mono">White</option>
+            </select>
+          </label>
+        </div>
+        <div class="wx-phase"><span>Formation</span><output id="phase">Forming</output></div>
+        <div id="sliders"></div>
+        <div class="wx-toggles">
+          <label class="wx-toggle"><input type="checkbox" id="glow" checked> Glow</label>
+          <label class="wx-toggle"><input type="checkbox" id="parallax" checked> Parallax</label>
+          <label class="wx-toggle"><input type="checkbox" id="cycle" checked> Shift</label>
+          <label class="wx-toggle"><input type="checkbox" id="square"> Square sea</label>
+          <button type="button" class="wx-btn wx-btn-sm" id="reset">Reset</button>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <div class="wx-controls">
+    <a class="wx-back-btn" href="../velocitymapping.html" title="Back to Studio" aria-label="Back to Studio">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+    </a>
+    <button type="button" class="wx-toggle-btn hud-active-btn" id="hudToggle"><span id="hudToggleText">Hide UI</span></button>
+  </div>
+
+  <div class="wx-titlecard" id="titlecard">
+    <span class="wx-tc-kicker" id="tcKicker">Country</span>
+    <span class="wx-tc-line">Live weather, rendered as art</span>
+    <span class="wx-tc-sub">Temperature colours the dots &middot; Wind carries them</span>
+  </div>
+
+  <p class="wx-error" id="noGl" hidden>This piece needs WebGL 2, which this browser doesn't offer.</p>
+
+</body>
+
+</html>
